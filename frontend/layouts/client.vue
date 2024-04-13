@@ -9,7 +9,7 @@
         <q-tabs
           v-model="tab"
           vertical
-          class="text-teal"
+          class="tw-text-gray-400 tw-py-20"
         >
           <q-tab name="requirements" label="Предъявляемые требования" />
           <q-tab name="common" :disable="requirements.classes.length && requirements.classes[0].value === '' || requirements.classes.length === 0" label="Загрузка файлов" />

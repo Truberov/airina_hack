@@ -96,7 +96,7 @@ const $q = useQuasar();
 
 async function loadFilesAny() {
   try {
-    await loadFilesClasses(files.value, classes.value);
+    await loadFilesClasses(files.value, classes.value, requirements.value.name);
     $q.notify({
       message: 'Пакет документов сохранен. Из-за несовпадения время проверки увеличено',
       color: 'green',
@@ -108,7 +108,7 @@ async function loadFilesAny() {
 }
 async function loadFiles() {
   if (isRequirement()) {
-    await loadFilesClasses(files.value, classes.value);
+    await loadFilesClasses(files.value, classes.value, requirements.value.name);
     $q.notify({
       message: 'Пакет документов сохранен',
       color: 'green',

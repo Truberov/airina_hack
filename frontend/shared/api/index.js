@@ -18,6 +18,10 @@ export async function loadFilesClasses(files, predicted, name = '') {
   files.map((file) => {
     formData.append('docs', file);
   });
+
+  files.map((file) => {
+    formData.append('docs_names', file.name);
+  });
   predicted.map((p) => {
     formData.append('docs_classes', p.result);
   });
