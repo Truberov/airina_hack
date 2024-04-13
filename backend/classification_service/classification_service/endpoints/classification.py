@@ -1,11 +1,12 @@
 import random
 
-from fastapi import APIRouter, Request, Body
+from fastapi import APIRouter, Request, Body, UploadFile
 from starlette import status
 
-from classification_service.schemas import ClassifyDocumentRequest
+from classification_service.utils.docs import parse_doc
 
 api_router = APIRouter(tags=["classification"])
+
 
 @api_router.post(
     "/classification",
@@ -13,9 +14,13 @@ api_router = APIRouter(tags=["classification"])
 )
 async def get_answer(
         _: Request,
-        body: ClassifyDocumentRequest = Body(...),
+        file: UploadFile,
 ):
-    data = ["statute", "order", "proxy", "contract", "act", "invoice", "bill", "contract offer", "determination",
-              "application", "arrangement"]
 
-    return random.choice(data)
+    data = ["statute", "order", "proxy", "contract", "act", "invoice", "bill", "contract offer", "determination",
+            "application", "arrangement"]
+    d_return = {
+        "result": random.choice(data),
+        "file": file.filename,
+    }
+    return d_return

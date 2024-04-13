@@ -16,15 +16,14 @@ class DefaultSettings(BaseSettings):
     APP_HOST: str = environ.get("APP_HOST", "http://127.0.0.1")
     APP_PORT: int = int(environ.get("APP_PORT", 8080))
 
-    POSTGRES_DB: str = environ.get("POSTGRES_DB", "balance")
+    POSTGRES_DB: str = environ.get("POSTGRES_DB", "lawyer")
     POSTGRES_HOST: str = environ.get("POSTGRES_HOST", "localhost")
-    POSTGRES_USER: str = environ.get("POSTGRES_USER", "student")
+    POSTGRES_USER: str = environ.get("POSTGRES_USER", "user")
     POSTGRES_PORT: int = int(environ.get("POSTGRES_PORT", "5432")[-4:])
-    POSTGRES_PASSWORD: str = environ.get("POSTGRES_PASSWORD", "shbr2023")
+    POSTGRES_PASSWORD: str = environ.get("POSTGRES_PASSWORD", "hackme")
     DB_CONNECT_RETRY: int = environ.get("DB_CONNECT_RETRY", 20)
     DB_POOL_SIZE: int = environ.get("DB_POOL_SIZE", 15)
-    LOG_FILEPATH: str = environ.get("LOG_FILEPATH", "../balance/config/operations.log")
-    APPROVE_SERVICE_URL: str = environ.get("APPROVE_SERVICE_URL", "http://localhost:7000/approve")
+    CLASSIFICATION_SERVICE_URL: str = environ.get("APPROVE_SERVICE_URL", "http://localhost:8081/api/v1")
 
     @property
     def database_settings(self) -> dict:
