@@ -40,7 +40,7 @@ services:
     build:
       context: ./frontend
       dockerfile: ./Dockerfile
-    command: python3 -m classification_service # fix this
+    command: node .output/server/index.mjs
     ports:
       - "3000:3000"
     restart: always
