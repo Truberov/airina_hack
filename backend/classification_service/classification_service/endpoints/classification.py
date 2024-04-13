@@ -3,7 +3,7 @@ import random
 from fastapi import APIRouter, Request, Body, UploadFile
 from starlette import status
 
-from classification_service.utils.docs import parse_doc
+from classification_service.utils.docs import parse_doc, get_doc_class
 
 api_router = APIRouter(tags=["classification"])
 
@@ -16,11 +16,10 @@ async def get_answer(
         _: Request,
         file: UploadFile,
 ):
+    content = await parse_doc(file)
 
-    data = ["statute", "order", "proxy", "contract", "act", "invoice", "bill", "contract offer", "determination",
-            "application", "arrangement"]
     d_return = {
-        "result": random.choice(data),
+        "result": get_doc_class(content),
         "file": file.filename,
     }
     return d_return

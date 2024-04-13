@@ -11,3 +11,5 @@ langchain-openai
 PyPDF2==3.0.1
 python-docx==1.1.0
 python-multipart==0.0.9
+transformers==4.39.3
+torch==2.2.2

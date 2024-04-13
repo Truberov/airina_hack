@@ -1,22 +1,37 @@
 services:
-  # lawyer:
-  #   build:
-  #     context: ./backend/digital_lawyer
-  #     dockerfile: ./Dockerfile
-  #   command: python3 -m digital_lawyer
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - "8080:8080"
-  #   restart: always
+  lawyer:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./backend/digital_lawyer
+    command: 'python manage.py runserver ${BACKEND_HOST}:${BACKEND_PORT}'
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/backend/digital_lawyer/digital_lawyer
+      - ./backend/digital_lawyer/digital_lawyer/:/code/
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - db
 
-    classification:
-      build:
-        context: ./backend/classification_service
-        dockerfile: ./Dockerfile
-      command: python3 -m classification_service
-      env_file:
-        - .env
-      ports:
-        - "8081:8080"
-      restart: always
+    # classification:
+    #   build:
+    #     context: ./backend/classification_service
+    #     dockerfile: ./Dockerfile
+    #   command: python3 -m classification_service
+    #   env_file:
+    #     - .env
+    #   ports:
+    #     - "8081:8080"
+    #   restart: always
+
+  db:
+    image: 'postgres:14'
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - '${POSTGRES_PORT}:${POSTGRES_PORT}'
+    volumes:
+      - ./pg_data/:/var/lib/postgresql/data
