@@ -1,14 +1,21 @@
 from rest_framework.routers import DefaultRouter
 
 from docs.viewsets import (
-    ArchiveViewSet,
+    ArchiveViewSet, DocumentViewSet
 )
 
 router = DefaultRouter()
 router.register(
     'archives',
     ArchiveViewSet,
-    basename='docs'
+    basename='archives'
 )
+
+router.register(
+    'documents',
+    DocumentViewSet,
+    basename='documents'
+)
+
 
 urlpatterns = router.urls

@@ -54,6 +54,10 @@ class Document(BaseModel):
         null=True,
         blank=True,
     )
+    filename = models.TextField(
+        null=True,
+        blank=True,
+    )
     file = models.FileField(
         verbose_name='Файл',
         upload_to=image_directory_path,

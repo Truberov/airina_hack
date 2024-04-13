@@ -1,1 +1,1 @@
-from .docs import ArchiveViewSet
+from .docs import ArchiveViewSet, DocumentViewSet
