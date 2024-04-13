@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: false },
+  ssr: false,
   modules: [
     '@nuxtjs/tailwindcss',
     '@nuxtjs/eslint-module',
@@ -11,6 +12,8 @@ export default defineNuxtConfig({
     plugins: [
       'Notify',
     ],
+    lang: 'ru',
+
     config: {
       brand: {
         primary: '#20808d',
@@ -20,10 +23,8 @@ export default defineNuxtConfig({
   },
   css: ['@/assets/css/tailwind.css', '@/assets/css/main.css'],
   runtimeConfig: {
-    baseURL: 'http://195.58.50.204:8080/api/v1',
-    headers: {},
     public: {
-      baseURL: 'http://195.58.50.204:8080/api/v1',
+      baseURL: 'http://158.160.137.244:8081/api/v1',
       headers: {},
     },
   },
