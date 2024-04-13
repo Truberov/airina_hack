@@ -24,6 +24,7 @@
       <q-item>
         <q-btn
           no-caps
+          @click="loadFiles"
           color="primary"
           class="tw-mt-10"
         >
@@ -35,5 +36,11 @@
   </div>
 </template>
 <script setup>
+import { loadFilesClasses } from '~/shared/api/index.js';
+
 const classes = useState('classes');
+const files = useState('files');
+async function loadFiles() {
+  await loadFilesClasses(files.value, classes.value);
+}
 </script>

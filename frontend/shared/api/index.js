@@ -11,3 +11,20 @@ export async function getFilesClasses(file) {
 
   return data.value;
 }
+export async function loadFilesClasses(files, predicted, name = '') {
+  const formData = new FormData();
+  console.log(files);
+  formData.append('name', name);
+  files.map((file) => {
+    formData.append('docs', file);
+  });
+  predicted.map((p) => {
+    formData.append('docs_classes', p.result);
+  });
+  const { data } = await useBaseFetch('http://10.0.24.56:8000/api/archives/', {
+    method: 'POST',
+    body: formData,
+  });
+
+  return data.value;
+}

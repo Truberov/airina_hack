@@ -60,20 +60,19 @@
 
 <script>
 import { ref, computed, onBeforeUnmount } from 'vue';
-import { getFilesClasses } from '~/shared/api/index.js';
+import { getFilesClasses, loadFilesClasses } from '~/shared/api/index.js';
 
 export default {
   setup() {
     const loading = ref(false);
     const classes = useState('classes', () => []);
-    const files = ref([]);
+    const files = useState('files', () => []);
     const uploadProgress = ref([]);
     const uploading = ref(null);
 
     function cleanUp() {
       clearTimeout(uploading.value);
     }
-
     async function updateUploadProgress() {
       loading.value = true;
 
@@ -120,6 +119,7 @@ export default {
     watch(() => files.value, () => {
       if (!files.value) {
         classes.value = [];
+        canUpload.value = false;
       }
     });
     return {
