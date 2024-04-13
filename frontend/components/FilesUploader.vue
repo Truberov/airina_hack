@@ -119,7 +119,6 @@ export default {
     watch(() => files.value, () => {
       if (!files.value) {
         classes.value = [];
-        canUpload.value = false;
       }
     });
     return {
@@ -129,7 +128,7 @@ export default {
       uploading,
 
       isUploading: computed(() => uploading.value !== null),
-      canUpload: computed(() => files.value !== null),
+      canUpload: computed(() => files.value?.length > 0),
 
       cancelFile(index) {
         this.uploadProgress[index] = {

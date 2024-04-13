@@ -1,7 +1,5 @@
 <template>
-  <NuxtLayout name="client">
-    <FilesUploaderView />
-  </NuxtLayout>
+  <NuxtLayout name="client" />
 </template>
 
 <style scoped>
