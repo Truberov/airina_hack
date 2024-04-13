@@ -15,16 +15,16 @@ services:
     depends_on:
       - db
 
-    # classification:
-    #   build:
-    #     context: ./backend/classification_service
-    #     dockerfile: ./Dockerfile
-    #   command: python3 -m classification_service
-    #   env_file:
-    #     - .env
-    #   ports:
-    #     - "8081:8080"
-    #   restart: always
+    classification:
+      build:
+        context: ./backend/classification_service
+        dockerfile: ./Dockerfile
+      command: python3 -m classification_service
+      env_file:
+        - .env
+      ports:
+        - "8081:8080"
+      restart: always
 
   db:
     image: 'postgres:14'
