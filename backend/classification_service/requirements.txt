@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+starlette
+pydantic
+pydantic-settings
+langchain
+langsmith
+langchain-community
+openai
+langchain-openai

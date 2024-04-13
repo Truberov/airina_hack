@@ -1,0 +1,22 @@
+services:
+  # lawyer:
+  #   build:
+  #     context: ./backend/digital_lawyer
+  #     dockerfile: ./Dockerfile
+  #   command: python3 -m digital_lawyer
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - "8080:8080"
+  #   restart: always
+
+    classification:
+      build:
+        context: ./backend/classification_service
+        dockerfile: ./Dockerfile
+      command: python3 -m classification_service
+      env_file:
+        - .env
+      ports:
+        - "8081:8080"
+      restart: always
