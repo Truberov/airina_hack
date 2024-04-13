@@ -1,38 +1,28 @@
 {
-  "name": "front",
-  "version": "0.0.1",
-  "description": "A Quasar Project",
-  "productName": "Quasar App",
-  "author": "Sokolov <man.mr.hamster.man@gmail.com>",
+  "name": "nuxt-app",
   "private": true,
+  "type": "module",
   "scripts": {
-    "lint": "eslint --ext .js,.vue ./",
-    "format": "prettier --write \"**/*.{js,vue,css,html,md,json}\" --ignore-path .gitignore",
-    "test": "echo \"No test specified\" && exit 0",
-    "dev": "quasar dev",
-    "build": "quasar build"
-  },
-  "dependencies": {
-    "axios": "^1.2.1",
-    "pinia": "^2.0.11",
-    "@quasar/extras": "^1.16.4",
-    "quasar": "^2.8.0",
-    "vue": "^3.4.18",
-    "vue-router": "^4.0.12"
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "eslint": "^8.11.0",
-    "eslint-plugin-vue": "^9.0.0",
-    "vite-plugin-checker": "^0.6.4",
-    "eslint-config-prettier": "^8.1.0",
-    "prettier": "^2.5.1",
-    "@quasar/app-vite": "^1.8.0",
-    "autoprefixer": "^10.4.2",
-    "postcss": "^8.4.14"
+    "@nuxtjs/eslint-module": "^4.1.0",
+    "@nuxtjs/tailwindcss": "^6.11.0",
+    "@vue/eslint-config-airbnb": "^8.0.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-vue": "^9.20.1",
+    "nuxt-mdi": "^1.1.6",
+    "nuxt-quasar-ui": "^2.0.7",
+    "tailwindcss": "^3.4.3"
   },
-  "engines": {
-    "node": "^20 || ^18 || ^16",
-    "npm": ">= 6.13.4",
-    "yarn": ">= 1.21.1"
+  "dependencies": {
+    "@mdi/js": "^7.4.47",
+    "nuxt": "^3.11.1",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0"
   }
 }
