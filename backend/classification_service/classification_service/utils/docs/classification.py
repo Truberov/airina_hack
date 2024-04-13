@@ -24,16 +24,16 @@ TOKENIZER = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
 
 def get_doc_class(text, model_path=MODEL_PATH):
     classes = {
-        'Договоры': 10,
-        'Заявления': 7,
-        'Приказы': 4,
-        'Соглашения': 6,
-        'Устав': 0,
-        'Доверенность': 8,
-        'Акт': 1,
-        'Решение': 9,
-        'Оферта': 5,
-        'Счет': 3,
+        'contract': 10,
+        'application': 7,
+        'order': 4,
+        'arrangement': 6,
+        'statute': 0,
+        'proxy': 8,
+        'act': 1,
+        'determination': 9,
+        'contract offer': 5,
+        'invoice': 3,
         'bill': 2
     }
 
