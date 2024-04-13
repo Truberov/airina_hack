@@ -8,7 +8,7 @@ class DocumentSerializer(serializers.ModelSerializer):
         model = Document
         fields = '__all__'
 
-    def to_representation(self, instance):  # TODO: Переписать эту ...ню!
+    def to_representation(self, instance):
         """
         Обрезает урл от лишней инфы
         """
