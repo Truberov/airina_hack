@@ -103,6 +103,8 @@ async function loadFilesAny() {
       position: 'top',
     });
     tab.value = 'archives';
+    classes.value = [];
+    files.value = [];
   } catch (e) {
     console.error(e);
   }
@@ -115,6 +117,8 @@ async function loadFiles() {
       color: 'green',
     });
     tab.value = 'archives';
+    files.value = [];
+    classes.value = [];
   } else {
     isNotRequirement.value = true;
   }

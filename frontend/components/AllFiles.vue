@@ -79,6 +79,7 @@ import { ref } from 'vue';
 import { format } from 'date-fns';
 import { mdiUploadCircleOutline } from '@mdi/js';
 import cloneDeep from 'lodash.clonedeep';
+import debounce from 'lodash.debounce';
 import { getFiles } from '~/shared/api/index.js';
 import { useClassesTranslate, useClassesTypes } from '~/composables/classesDict.js';
 
@@ -117,14 +118,14 @@ async function updatePage(page) {
   pagination.value.rowsNumber = temp.count;
   loading.value = false;
 }
-watch(() => search.value, () => {
+watch(() => search.value, debounce(() => {
   if (search.value) {
-    filterParams.value.filename = search.value;
+    filterParams.value.search = search.value;
   } else {
-    delete filterParams.value.filename;
+    delete filterParams.value.search;
   }
   updatePage(1);
-});
+}, 750));
 watch(() => filter.value, () => {
   if (filter.value?.value) {
     filterParams.value.predicted_class = filter.value.value;
