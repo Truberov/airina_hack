@@ -89,7 +89,6 @@ const filter = ref('');
 const search = ref('');
 const filterParams = ref({
   page: 1,
-  ordering: '-created_at',
 });
 const pagination = ref({});
 const columns = [
