@@ -25,7 +25,9 @@
             Заказчику нужно предъявить требования перед тем как пользователю загрузить документы
           </q-tooltip>
           <div class="tw-opacity-70 tw-h-3/5 tw-justify-end tw-text-sky-500 tw-flex tw-flex-col hover:tw-pb-0 tw-align-bottom tw-items-center tw-text-3xl tw-font-bold">
-            <span class="tw-text-gray-400 tw-text-base tw-font-normal tw-pb-5">design by</span>
+            <p align="center" class="tw-text-gray-400 tw-w-2/3 tw-text-base tw-font-normal tw-pb-5">
+              Кейс ООО «Акселератор Возможностей» при ИНТЦ МГУ «Воробьевы горы»:
+              "Семантическая классификация документов"</p>
             <div class="tw-flex tw-items-center">
               <q-icon class="hover:tw-animate-bounce tw-mr-2 tw-bg-gradient-to-r tw-from-sky-500 tw-to-indigo-500 tw-bg-clip-text tw-inline-block tw-text-transparent" name="font_download" />
               <span class="tablet:tw-block tw-hidden">AiRina</span>

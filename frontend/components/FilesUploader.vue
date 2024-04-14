@@ -3,13 +3,13 @@
     <q-file
       :model-value="files"
       @update:model-value="updateFiles"
-      label="Выбирите файлы"
+      label="Выберите файлы"
       outlined
       multiple
       dense
       use-chips
       :loading="loading"
-      accept=".pdf, .docx, .doc, .rtf"
+      accept=".pdf, .docx, .rtf"
       :clearable="!isUploading"
       style="max-width: 600px"
       counter
@@ -42,9 +42,13 @@
           icon="cloud_upload"
           round
           @click="upload"
-          :disable="!canUpload"
+          :disable="files.length < requirements.classes.length"
           :loading="isUploading"
-        />
+        >
+          <q-tooltip class="tw-text-base" v-if="files.length < requirements.classes.length">
+            Требуется загрузить {{requirements.classes.length}}
+          </q-tooltip>
+        </q-btn>
       </template>
     </q-file>
   </div>
@@ -68,6 +72,7 @@ export default {
     }
     async function updateUploadProgress() {
       loading.value = true;
+      classes.value = [];
       const requirementsCopy = cloneDeep(requirements.value);
 
       for (const file of files.value) {
@@ -141,6 +146,7 @@ export default {
       },
 
       updateFiles(newFiles) {
+        classes.value = [];
         files.value = newFiles;
         uploadProgress.value = (newFiles || []).map(file => ({
           error: false,
