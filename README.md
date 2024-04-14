@@ -32,4 +32,5 @@
 4. Запустите сервисы с помощью Docker Compose:
 ```docker compose -f docker-compose.classify.yml up -d --build```
 ### Обучение модели классификации
-### Инференс модели классификации
+ссылка на веса: https://drive.google.com/file/d/1--d6zCPDtNeLDhh9cwy9zohZjBrZBaCc/view
+в папке train блокнот для обучения
