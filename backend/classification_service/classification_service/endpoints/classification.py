@@ -35,6 +35,6 @@ async def get_answer_by_text(
     content = data.content
 
     d_return = {
-        "result": get_doc_class(content),
+        "result": await get_doc_class(content),
     }
     return d_return
