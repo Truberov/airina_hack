@@ -9,7 +9,7 @@
       dense
       use-chips
       :loading="loading"
-      accept=".pdf, .docx, .doc"
+      accept=".pdf, .docx, .doc, .rtf"
       :clearable="!isUploading"
       style="max-width: 600px"
       counter
@@ -22,7 +22,6 @@
         <q-chip
           class="full-width q-my-xs"
           square
-          removable
           @remove="cancelFile(index)"
         >
 
