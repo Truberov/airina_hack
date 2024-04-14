@@ -7,6 +7,7 @@
       outlined
       multiple
       dense
+      append
       use-chips
       :loading="loading"
       accept=".pdf, .docx, .rtf"
@@ -22,6 +23,7 @@
         <q-chip
           class="full-width q-my-xs"
           square
+          removable
           @remove="cancelFile(index)"
         >
 
@@ -70,6 +72,9 @@ export default {
     function cleanUp() {
       clearTimeout(uploading.value);
     }
+    watch(() => files.value, {
+
+    });
     async function updateUploadProgress() {
       loading.value = true;
       classes.value = [];
@@ -146,7 +151,6 @@ export default {
       },
 
       updateFiles(newFiles) {
-        classes.value = [];
         files.value = newFiles;
         uploadProgress.value = (newFiles || []).map(file => ({
           error: false,
