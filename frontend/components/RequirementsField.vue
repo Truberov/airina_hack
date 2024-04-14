@@ -11,7 +11,7 @@
             filled
             type="string"
             v-model="requirements.name"
-            label="Названия пакета документов"
+            label="Название пакета документов"
             lazy-rules
             :rules="[
               val => val !== null && val !== '' || 'Пожалуйста введите название пакета',
