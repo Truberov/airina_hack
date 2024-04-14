@@ -7,13 +7,10 @@
       outlined
       multiple
       dense
-      use-chips
       :loading="loading"
       accept=".pdf, .docx, .doc"
       :clearable="!isUploading"
-      style="max-width: 600px"
-      counter
-      :max-files="requirements.classes.length"
+      style="max-width: 400px"
     >
       <template v-slot:prepend>
         <q-icon name="attach_file" />
@@ -21,10 +18,20 @@
       <template v-slot:file="{ index, file }">
         <q-chip
           class="full-width q-my-xs"
+          :removable="isUploading && uploadProgress[index].percent < 1"
           square
-          removable
           @remove="cancelFile(index)"
         >
+          <q-linear-progress
+            class="absolute-full full-height"
+            :value="uploadProgress[index].percent"
+            :color="uploadProgress[index].color"
+            track-color="grey-2"
+          />
+
+          <q-avatar>
+            <q-icon :name="uploadProgress[index].icon" />
+          </q-avatar>
 
           <div class="ellipsis relative-position">
             {{ file.name }}
@@ -42,7 +49,7 @@
           dense
           icon="cloud_upload"
           round
-          @click="upload"
+          @click="loadFiles"
           :disable="!canUpload"
           :loading="isUploading"
         />
@@ -53,72 +60,47 @@
 
 <script>
 import { ref, computed, onBeforeUnmount } from 'vue';
-import cloneDeep from 'lodash.clonedeep';
 import { getFilesClasses, loadFilesClasses } from '~/shared/api/index.js';
 
 export default {
-  setup() {
+  emits: ['endLoad'],
+
+  setup(props, ctx) {
     const loading = ref(false);
     const classes = useState('classes', () => []);
     const files = useState('files', () => []);
     const uploadProgress = ref([]);
     const uploading = ref(null);
-    const requirements = useState('requirements');
+
     function cleanUp() {
       clearTimeout(uploading.value);
     }
-    async function updateUploadProgress() {
-      loading.value = true;
-      const requirementsCopy = cloneDeep(requirements.value);
-
-      for (const file of files.value) {
-        try {
-          const temp = await getFilesClasses(file);
-          temp.isCheck = false;
-          requirementsCopy.classes = requirementsCopy.classes.filter((item) => {
-            console.log(item);
-            if (item.value.value === temp.result) {
-              temp.isCheck = true;
-            } else {
-              return item;
-            }
-          });
-          console.log(requirementsCopy);
-          classes.value.push(temp);
-        } catch (e) {
-          console.error(e);
-          classes.value.push({
-            file: file.name,
-            result: 'none',
-          });
+    const $q = useQuasar();
+    async function loadFiles() {
+      try {
+        loading.value = true;
+        for (const file of files.value) {
+          try {
+            const temp = await getFilesClasses(file);
+            classes.value.push(temp);
+          } catch (e) {
+            classes.value.push({
+              file: file.name,
+              result: 'none',
+            });
+          }
         }
+        await loadFilesClasses(files.value, classes.value);
+        $q.notify({
+          message: 'Документы успешно загружены',
+          color: 'green',
+          position: 'top',
+        });
+        loading.value = false;
+        ctx.emit('endLoad');
+      } catch (e) {
+        console.error(e);
       }
-
-      loading.value = false;
-
-      // uploadProgress.value = uploadProgress.value.map(progress => {
-      //   if (progress.percent === 1 || progress.error === true) {
-      //     return progress;
-      //   }
-      //
-      //   const percent = Math.min(1, progress.percent + Math.random() / 10);
-      //   const error = percent < 1 && Math.random() > 0.95;
-      //
-      //   if (error === false && percent < 1 && done === true) {
-      //     done = false;
-      //   }
-      //
-      //   return {
-      //     ...progress,
-      //     error,
-      //     color: error === true ? 'red-2' : 'green-2',
-      //     percent,
-      //   };
-      // });
-      //
-      // uploading.value = done !== true
-      //   ? setTimeout(updateUploadProgress, 300)
-      //   : null;
     }
 
     onBeforeUnmount(cleanUp);
@@ -128,17 +110,21 @@ export default {
       }
     });
     return {
+      loadFiles,
       loading,
       files,
       uploadProgress,
-      requirements,
       uploading,
 
       isUploading: computed(() => uploading.value !== null),
       canUpload: computed(() => files.value?.length > 0),
 
       cancelFile(index) {
-        files.value = files.value.filter((f, i) => i !== index);
+        this.uploadProgress[index] = {
+          ...this.uploadProgress[index],
+          error: true,
+          color: 'orange-2',
+        };
       },
 
       updateFiles(newFiles) {

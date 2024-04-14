@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",
+    "date-fns": "^3.6.0",
+    "lodash.clonedeep": "^4.5.0",
     "nuxt": "^3.11.1",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
