@@ -25,9 +25,26 @@ export async function loadFilesClasses(files, predicted, name = '') {
   predicted.map((p) => {
     formData.append('docs_classes', p.result);
   });
-  const { data } = await useBaseFetch('http://10.0.24.56:8000/api/archives/', {
+  const { data } = await useBaseFetch('http://158.160.137.244:8000/api/archives/', {
     method: 'POST',
     body: formData,
+  });
+
+  return data.value;
+}
+export async function getFiles(params) {
+  const { data } = await useBaseFetch('http://158.160.137.244:8000/api/documents/', {
+    method: 'GET',
+    query: params,
+  });
+
+  return data.value;
+}
+
+export async function getFilesArchives(params) {
+  const { data } = await useBaseFetch('http://158.160.137.244:8000/api/archives/', {
+    method: 'GET',
+    query: params,
   });
 
   return data.value;

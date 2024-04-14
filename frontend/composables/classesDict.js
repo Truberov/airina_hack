@@ -1,0 +1,26 @@
+export const useClassesTypes = () => useState('classesTypes', () => [ // !! Есть возможность расширить типы документов
+  { value: 'proxy', label: 'Доверенность' },
+  { value: 'contract', label: 'Договор' },
+  { value: 'act', label: 'Акт' },
+  { value: 'application', label: 'Заявление' },
+  { value: 'order', label: 'Приказ' },
+  { value: 'invoice', label: 'Счет' },
+  { value: 'bill', label: 'Приложение' },
+  { value: 'arrangement', label: 'Соглашение' },
+  { value: 'contract оffer', label: 'Договор оферты' },
+  { value: 'statute', label: 'Устав' },
+  { value: 'determination', label: 'Решение' },
+]);
+export const useClassesTranslate = () => useState('classesTranslate', () => ({
+  proxy: 'Доверенность',
+  contract: 'Договор',
+  act: 'Акт',
+  application: 'Заявление',
+  order: 'Приказ',
+  invoice: 'Счет',
+  bill: 'Приложение',
+  arrangement: 'Соглашение',
+  contractOffer: 'Договор оферты',
+  statute: 'Устав',
+  determination: 'Решение',
+}));

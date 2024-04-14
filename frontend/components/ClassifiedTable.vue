@@ -3,12 +3,12 @@
     <q-dialog v-model="isNotRequirement" persistent>
       <q-card>
         <q-card-section class="row items-center">
-          <span class="tw-text-lg">Найдено не совпадение в предоставленых типах документов. Рекомендуется проветь загруженые документы</span>
+          <span class="tw-text-lg">Найдено несовпадение в предоставленых типах документов. Рекомендуется проверить загруженые документы</span>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn no-caps label="Назад" color="primary" v-close-popup />
-          <q-btn no-caps flat label="Все равно сохранить" @click="loadFilesAny" color="red" v-close-popup />
+          <q-btn no-caps label="Иcправить" color="primary" v-close-popup />
+          <q-btn no-caps outline label="Все равно отправить" @click="loadFilesAny" color="red" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -20,6 +20,9 @@
         <q-item-section top>
           <q-item-label class="tw-text-lg tw-font-bold">Класс</q-item-label>
         </q-item-section>
+        <q-item-section top>
+          <q-item-label class="tw-text-lg tw-font-bold">Проверка</q-item-label>
+        </q-item-section>
       </q-item>
 
       <div v-for="item in classes" :key="item.file">
@@ -27,8 +30,15 @@
           <q-item-section>
             <q-item-label class="tw-text-lg">{{item.file}}</q-item-label>
           </q-item-section>
+
           <q-item-section top>
             <q-item-label caption class="tw-text-lg">{{ classesTranslate[item.result] }}</q-item-label>
+          </q-item-section>
+          <q-item-section top>
+            <q-item-label class="tw-text-lg">
+              <q-icon v-if="item.isCheck" color="green" :name="mdiCheckBold" />
+              <q-icon v-else color="red" :name="mdiCloseThick" />
+            </q-item-label>
           </q-item-section>
         </q-item>
         <q-separator inset />
@@ -40,7 +50,7 @@
           color="primary"
           class="tw-mt-10"
         >
-          Сохранить
+          Отправить на проверку
         </q-btn>
       </q-item>
     </q-list>
@@ -48,24 +58,14 @@
   </div>
 </template>
 <script setup>
+import { mdiCloseThick, mdiCheckBold } from '@mdi/js';
+
 import { loadFilesClasses } from '~/shared/api/index.js';
 
 const isNotRequirement = ref(false);
 const classes = useState('classes');
 const files = useState('files');
-const classesTranslate = {
-  proxy: 'Доверенность',
-  contract: 'Договор',
-  act: 'Акт',
-  application: 'Заявление',
-  order: 'Приказ',
-  invoice: 'Счет',
-  bill: 'Приложение',
-  arrangement: 'Соглашение',
-  contractOffer: 'Договор оферты',
-  statute: 'Устав',
-  determination: 'Решение',
-};
+const classesTranslate = useClassesTranslate();
 const requirements = useState('requirements');
 function isRequirement() {
   const checkerClasses = {};
@@ -93,15 +93,16 @@ function isRequirement() {
   return true;
 }
 const $q = useQuasar();
-
+const tab = useState('tab');
 async function loadFilesAny() {
   try {
     await loadFilesClasses(files.value, classes.value, requirements.value.name);
     $q.notify({
-      message: 'Пакет документов сохранен. Из-за несовпадения время проверки увеличено',
+      message: 'Ваши документы успешно отправлены',
       color: 'green',
       position: 'top',
     });
+    tab.value = 'archives';
   } catch (e) {
     console.error(e);
   }
@@ -110,9 +111,10 @@ async function loadFiles() {
   if (isRequirement()) {
     await loadFilesClasses(files.value, classes.value, requirements.value.name);
     $q.notify({
-      message: 'Пакет документов сохранен',
+      message: 'Ваши документы успешно отправлены',
       color: 'green',
     });
+    tab.value = 'archives';
   } else {
     isNotRequirement.value = true;
   }

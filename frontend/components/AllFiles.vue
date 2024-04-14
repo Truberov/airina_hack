@@ -1,59 +1,61 @@
 <template>
-  <div class="q-pa-md">
+  <div class="tw-p-20">
+    <q-dialog v-model="dialogUploading">
+      <q-card>
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">Загрузка документов в базу</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section>
+          <FileUploaderDB @end-load="updateDB" />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+    <div class="tw-flex tw-items-center tw-justify-between">
+      <div class="tw-mb-10 tw-mr-10 tw-w-1/5">
+        <q-select clearable filled label="Фильтр классов" v-model="filter" :options="classesOptions" dense class="tw-w-full tw-mr-10" />
+      </div>
+      <div class="tw-mb-10">
+        <q-icon @click="dialogUploading = true" color="primary" class="tw-cursor-pointer" size="32px" :name="mdiUploadCircleOutline" />
+
+      </div>
+    </div>
     <q-table
       flat
       bordered
-      title="База архивов"
+      title="База файлов"
       :rows="rows"
       :columns="columns"
+      :loading="loading"
       row-key="name"
       :rows-per-page-options="[10]"
       binary-state-sort
     >
-      <template v-slot:header="props">
-        <q-tr :props="props">
-          <q-th auto-width />
-          <q-th
-            v-for="col in props.cols"
-            :key="col.name"
-            :props="props"
-          >
-            {{ col.label }}
-          </q-th>
-        </q-tr>
-      </template>
       <template v-slot:body="props">
         <q-tr :props="props">
-          <q-td auto-width>
-            <q-btn size="sm" color="primary" flat round dense @click="props.expand = !props.expand" :icon="props.expand ? mdiChevronUp : mdiChevronDown" />
+          <q-td key="filename" :props="props">
+            <NuxtLink target="_blank" :to="props.row.file">
+              {{ props.row.filename }}
+            </NuxtLink>
           </q-td>
-          <td>
-            {{props.row.name}}
-          </td>
-          <td>
-            {{props.row.docs.length}}
-          </td>
-        </q-tr>
-        <q-tr v-show="props.expand" :props="props">
-          <q-td colspan="100%">
-            <q-list>
-              <q-item dense v-for="item in props.row.docs" :key="item.file">
-                <q-item-section>
-                  <q-item-label class="tw-text-sm">
-                    <NuxtLink :to="item.file" target="_blank">{{item.filename}}</NuxtLink>
-                  </q-item-label>
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label caption class="tw-text-sm">{{ classesTranslate[item.predicted_class] }}</q-item-label>
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label caption class="tw-text-sm">{{ format(new Date(item.created_at), 'HH:mm:ss dd.MM.yyyy') }}</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
-
+          <q-td key="predicted_class" :props="props">
+            {{ classesTranslate[props.row.predicted_class] }}
+          </q-td>
+          <q-td key="created_at" :props="props">
+            {{ format(new Date(props.row.created_at), 'HH:mm:ss dd.MM.yyyy') }}
           </q-td>
         </q-tr>
+      </template>
+      <template v-slot:top-right>
+        <div class="tw-flex">
+          <q-input dense debounce="300" v-model="search" placeholder="Поиск">
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+        </div>
       </template>
       <template v-slot:pagination>
         <div class="row justify-start">
@@ -75,9 +77,9 @@
 <script>
 import { ref } from 'vue';
 import { format } from 'date-fns';
-import { mdiUploadCircleOutline, mdiChevronDown, mdiChevronUp } from '@mdi/js';
+import { mdiUploadCircleOutline } from '@mdi/js';
 import cloneDeep from 'lodash.clonedeep';
-import { getFilesArchives } from '~/shared/api/index.js';
+import { getFiles } from '~/shared/api/index.js';
 import { useClassesTranslate, useClassesTypes } from '~/composables/classesDict.js';
 
 const dialogUploading = ref(false);
@@ -88,29 +90,29 @@ const search = ref('');
 const filterParams = ref({
   page: 1,
 });
-const rows = ref([]);
 const pagination = ref({});
-
 const columns = [
   {
     name: 'filename',
     required: true,
-    label: 'Название aрхива',
+    label: 'Название документа',
     align: 'left',
     field: row => row.filename,
     format: val => `${val}`,
   },
-  { name: 'docs', align: 'left', label: 'Количество документов', field: row => row.docs.length },
+  { name: 'predicted_class', align: 'left', label: 'Класс документа', field: row => classesTranslate.value[row.predicted_class] },
+  { name: 'created_at', align: 'left', label: 'Дата загрузки', field: row => format(new Date(row.created_at), 'HH:mm:ss dd.MM.yyyy'), sortable: true },
 
 ];
 const classesTranslate = useClassesTranslate();
-const classesOptions = useClassesTypes();
+const classesOptions = cloneDeep(useClassesTypes().value);
+const rows = ref([]);
 
 async function updatePage(page) {
   loading.value = true;
   filterParams.value.page = page;
   const filterParamsCopy = cloneDeep(filterParams.value);
-  const temp = await getFilesArchives(filterParamsCopy);
+  const temp = await getFiles(filterParamsCopy);
   rows.value = temp.results;
   pagination.value.rowsNumber = temp.count;
   loading.value = false;
@@ -136,7 +138,7 @@ async function updateDB() {
   dialogUploading.value = false;
   loading.value = true;
   filterParams.value = { page: 1 };
-  const temp = await getFilesArchives(filterParams);
+  const temp = await getFiles(filterParams);
   pagination.value.rowsNumber = temp.count;
   rows.value = temp.results;
   loading.value = false;
@@ -145,7 +147,7 @@ export default {
   methods: {
     format },
   async setup() {
-    const data = await getFilesArchives(filterParams.value);
+    const data = await getFiles(filterParams.value);
     rows.value = data.results;
     pagination.value = {
       page: 1,
@@ -154,8 +156,6 @@ export default {
     };
     return {
       pagination,
-      mdiChevronDown,
-      mdiChevronUp,
       updatePage,
       search,
       loading,
@@ -171,5 +171,4 @@ export default {
     };
   },
 };
-
 </script>

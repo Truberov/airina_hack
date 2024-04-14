@@ -18,25 +18,25 @@
         />
         <div>
           <div v-if="requirements.classes.length" class="tw-text-lg tw-flex tw-justify-between">
-            <div class="w-2/3">
+            <div>
               Название класса
             </div>
-            <div class="w-1/3">
-              Количество
-            </div>
+            <!--            <div class="w-1/3">-->
+            <!--              Количество-->
+            <!--            </div>-->
           </div>
           <div
             v-for="cls in requirements.classes"
             :key="cls.id"
             class="tw-flex tw-justify-between tw-mb-5"
           >
-            <div class="w-2/3 tw-grow">
+            <div class="tw-grow">
               <q-select
                 v-model="cls.value"
                 option-label="label"
                 option-value="value"
                 dense
-                class="tw-grow tw-mr-10"
+                class="tw-grow"
                 filled
                 :rules="[
                   val => val !== null && val !== '' || 'Пожалуйста выбирите тип документа',
@@ -49,17 +49,17 @@
                 </template>
               </q-select>
             </div>
-            <div class="w-1/3 ">
-              <q-input
-                v-model="cls.number"
-                filled
-                dense
-                type="number"
-                :rules="[
-                  val => val !== null && val > 0 || `Напишите сколько необходимо`,
-                ]"
-              />
-            </div>
+            <!--            <div class="w-1/3 ">-->
+            <!--              <q-input-->
+            <!--                v-model="cls.number"-->
+            <!--                filled-->
+            <!--                dense-->
+            <!--                type="number"-->
+            <!--                :rules="[-->
+            <!--                  val => val !== null && val > 0 || `Напишите сколько необходимо`,-->
+            <!--                ]"-->
+            <!--              />-->
+            <!--            </div>-->
           </div>
         </div>
         <div
@@ -94,6 +94,12 @@ const requirements = useState('requirements', () => ({
 const $q = useQuasar();
 function resetRequirements() {
   requirements.value.classes = [];
+  requirements.value.name = '';
+  classesOptions.value = classesOptions.value.map((cls) => ({
+    ...cls,
+    disable: false,
+  }
+  ));
 }
 const tab = useState('tab');
 function chooseRequirements() {
@@ -134,18 +140,6 @@ function addClass() {
     number: 1,
   });
 }
-const classesOptions = ref([ // !! Есть возможность расширить типы документов
-  { value: 'proxy', label: 'Доверенность' },
-  { value: 'contract', label: 'Договор' },
-  { value: 'act', label: 'Акт' },
-  { value: 'application', label: 'Заявление' },
-  { value: 'order', label: 'Приказ' },
-  { value: 'invoice', label: 'Счет' },
-  { value: 'bill', label: 'Приложение' },
-  { value: 'arrangement', label: 'Соглашение' },
-  { value: 'contract оffer', label: 'Договор оферты' },
-  { value: 'statute', label: 'Устав' },
-  { value: 'determination', label: 'Решение' },
-]);
+const classesOptions = useState('classesTypes');
 
 </script>
