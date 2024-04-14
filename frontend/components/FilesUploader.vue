@@ -75,15 +75,18 @@ export default {
         try {
           const temp = await getFilesClasses(file);
           temp.isCheck = false;
-          requirementsCopy.classes = requirementsCopy.classes.map((item) => {
+          requirementsCopy.classes = requirementsCopy.classes.filter((item) => {
+            console.log(item);
             if (item.value.value === temp.result) {
               temp.isCheck = true;
             } else {
               return item;
             }
           });
+          console.log(requirementsCopy);
           classes.value.push(temp);
         } catch (e) {
+          console.error(e);
           classes.value.push({
             file: file.name,
             result: 'none',
