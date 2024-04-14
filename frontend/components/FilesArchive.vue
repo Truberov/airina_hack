@@ -55,7 +55,19 @@
           </q-td>
         </q-tr>
       </template>
-
+      <template v-slot:pagination>
+        <div class="row justify-start">
+          <q-pagination
+            v-if="10 < pagination.rowsNumber"
+            v-model="pagination.page"
+            @update:model-value="updatePage(pagination.page)"
+            :max="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
+            direction-links
+            flat
+            active-color="primary"
+          />
+        </div>
+      </template>
     </q-table>
   </div>
 </template>
@@ -77,6 +89,9 @@ const filterParams = ref({
   page: 1,
   ordering: '-created_at',
 });
+const rows = ref([]);
+const pagination = ref({});
+
 const columns = [
   {
     name: 'filename',
@@ -91,14 +106,7 @@ const columns = [
 ];
 const classesTranslate = useClassesTranslate();
 const classesOptions = useClassesTypes();
-const rows = ref([]);
-const data = await getFilesArchives(filterParams.value);
-rows.value = data.results;
-const pagination = ref({
-  page: 1,
-  rowsPerPage: 10,
-  rowsNumber: data.count,
-});
+
 async function updatePage(page) {
   loading.value = true;
   filterParams.value.page = page;
@@ -137,7 +145,14 @@ async function updateDB() {
 export default {
   methods: {
     format },
-  setup() {
+  async setup() {
+    const data = await getFilesArchives(filterParams.value);
+    rows.value = data.results;
+    pagination.value = {
+      page: 1,
+      rowsPerPage: 10,
+      rowsNumber: data.count,
+    };
     return {
       pagination,
       mdiChevronDown,

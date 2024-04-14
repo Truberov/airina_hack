@@ -94,6 +94,12 @@ const requirements = useState('requirements', () => ({
 const $q = useQuasar();
 function resetRequirements() {
   requirements.value.classes = [];
+  requirements.value.name = '';
+  classesOptions.value = classesOptions.value.map((cls) => ({
+    ...cls,
+    disable: false,
+  }
+  ));
 }
 const tab = useState('tab');
 function chooseRequirements() {

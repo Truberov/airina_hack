@@ -91,6 +91,7 @@ const filterParams = ref({
   page: 1,
   ordering: '-created_at',
 });
+const pagination = ref({});
 const columns = [
   {
     name: 'filename',
@@ -105,15 +106,9 @@ const columns = [
 
 ];
 const classesTranslate = useClassesTranslate();
-const classesOptions = useClassesTypes();
+const classesOptions = cloneDeep(useClassesTypes().value);
 const rows = ref([]);
-const data = await getFiles(filterParams.value);
-rows.value = data.results;
-const pagination = ref({
-  page: 1,
-  rowsPerPage: 10,
-  rowsNumber: data.count,
-});
+
 async function updatePage(page) {
   loading.value = true;
   filterParams.value.page = page;
@@ -152,7 +147,14 @@ async function updateDB() {
 export default {
   methods: {
     format },
-  setup() {
+  async setup() {
+    const data = await getFiles(filterParams.value);
+    rows.value = data.results;
+    pagination.value = {
+      page: 1,
+      rowsPerPage: 10,
+      rowsNumber: data.count,
+    };
     return {
       pagination,
       updatePage,

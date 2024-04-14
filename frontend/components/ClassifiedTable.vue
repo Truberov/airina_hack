@@ -93,7 +93,7 @@ function isRequirement() {
   return true;
 }
 const $q = useQuasar();
-
+const tab = useState('tab');
 async function loadFilesAny() {
   try {
     await loadFilesClasses(files.value, classes.value, requirements.value.name);
@@ -102,6 +102,7 @@ async function loadFilesAny() {
       color: 'green',
       position: 'top',
     });
+    tab.value = 'archives';
   } catch (e) {
     console.error(e);
   }
@@ -113,6 +114,7 @@ async function loadFiles() {
       message: 'Ваши документы успешно отправлены',
       color: 'green',
     });
+    tab.value = 'archives';
   } else {
     isNotRequirement.value = true;
   }
