@@ -3,27 +3,55 @@
     <q-table
       flat
       bordered
-      title="Treats"
+      title="База архивов"
       :rows="rows"
       :columns="columns"
       row-key="name"
+      :rows-per-page-options="[10]"
+      binary-state-sort
     >
-      <template v-slot:body="props">
+      <template v-slot:header="props">
         <q-tr :props="props">
-          <q-td auto-width>
-            <q-btn size="sm" color="accent" round dense @click="props.expand = !props.expand" :icon="props.expand ? 'remove' : 'add'" />
-          </q-td>
-          <q-td
+          <q-th auto-width />
+          <q-th
             v-for="col in props.cols"
             :key="col.name"
             :props="props"
           >
-            {{ col.value }}
+            {{ col.label }}
+          </q-th>
+        </q-tr>
+      </template>
+      <template v-slot:body="props">
+        <q-tr :props="props">
+          <q-td auto-width>
+            <q-btn size="sm" color="primary" flat round dense @click="props.expand = !props.expand" :icon="props.expand ? mdiChevronUp : mdiChevronDown" />
           </q-td>
+          <td>
+            {{props.row.name}}
+          </td>
+          <td>
+            {{props.row.docs.length}}
+          </td>
         </q-tr>
         <q-tr v-show="props.expand" :props="props">
           <q-td colspan="100%">
-            <div class="text-left">This is expand slot for row above: {{ props.row.name }}.</div>
+            <q-list>
+              <q-item dense v-for="item in props.row.docs" :key="item.file">
+                <q-item-section>
+                  <q-item-label class="tw-text-sm">
+                    <NuxtLink :to="item.file" target="_blank">{{item.filename}}</NuxtLink>
+                  </q-item-label>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label caption class="tw-text-sm">{{ classesTranslate[item.predicted_class] }}</q-item-label>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label caption class="tw-text-sm">{{ format(new Date(item.created_at), 'HH:mm:ss dd.MM.yyyy') }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+
           </q-td>
         </q-tr>
       </template>
@@ -33,134 +61,101 @@
 </template>
 
 <script>
+import { ref } from 'vue';
+import { format } from 'date-fns';
+import { mdiUploadCircleOutline, mdiChevronDown, mdiChevronUp } from '@mdi/js';
+import cloneDeep from 'lodash.clonedeep';
+import { getFilesArchives } from '~/shared/api/index.js';
+import { useClassesTranslate, useClassesTypes } from '~/composables/classesDict.js';
+
+const dialogUploading = ref(false);
+const loading = ref(false);
+const files = ref(null);
+const filter = ref('');
+const search = ref('');
+const filterParams = ref({
+  page: 1,
+  ordering: '-created_at',
+});
 const columns = [
   {
-    name: 'name',
+    name: 'filename',
     required: true,
-    label: 'Dessert (100g serving)',
+    label: 'Название aрхива',
     align: 'left',
-    field: row => row.name,
+    field: row => row.filename,
     format: val => `${val}`,
-    sortable: true,
   },
-  { name: 'calories', align: 'center', label: 'Calories', field: 'calories', sortable: true },
-  { name: 'fat', label: 'Fat (g)', field: 'fat', sortable: true },
-  { name: 'carbs', label: 'Carbs (g)', field: 'carbs' },
-  { name: 'protein', label: 'Protein (g)', field: 'protein' },
-  { name: 'sodium', label: 'Sodium (mg)', field: 'sodium' },
-  { name: 'calcium', label: 'Calcium (%)', field: 'calcium', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
-  { name: 'iron', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
-];
+  { name: 'docs', align: 'left', label: 'Количество документов', field: row => row.docs.length },
 
-const rows = [
-  {
-    name: 'Frozen Yogurt',
-    calories: 159,
-    fat: 6.0,
-    carbs: 24,
-    protein: 4.0,
-    sodium: 87,
-    calcium: '14%',
-    iron: '1%',
-  },
-  {
-    name: 'Ice cream sandwich',
-    calories: 237,
-    fat: 9.0,
-    carbs: 37,
-    protein: 4.3,
-    sodium: 129,
-    calcium: '8%',
-    iron: '1%',
-  },
-  {
-    name: 'Eclair',
-    calories: 262,
-    fat: 16.0,
-    carbs: 23,
-    protein: 6.0,
-    sodium: 337,
-    calcium: '6%',
-    iron: '7%',
-  },
-  {
-    name: 'Cupcake',
-    calories: 305,
-    fat: 3.7,
-    carbs: 67,
-    protein: 4.3,
-    sodium: 413,
-    calcium: '3%',
-    iron: '8%',
-  },
-  {
-    name: 'Gingerbread',
-    calories: 356,
-    fat: 16.0,
-    carbs: 49,
-    protein: 3.9,
-    sodium: 327,
-    calcium: '7%',
-    iron: '16%',
-  },
-  {
-    name: 'Jelly bean',
-    calories: 375,
-    fat: 0.0,
-    carbs: 94,
-    protein: 0.0,
-    sodium: 50,
-    calcium: '0%',
-    iron: '0%',
-  },
-  {
-    name: 'Lollipop',
-    calories: 392,
-    fat: 0.2,
-    carbs: 98,
-    protein: 0,
-    sodium: 38,
-    calcium: '0%',
-    iron: '2%',
-  },
-  {
-    name: 'Honeycomb',
-    calories: 408,
-    fat: 3.2,
-    carbs: 87,
-    protein: 6.5,
-    sodium: 562,
-    calcium: '0%',
-    iron: '45%',
-  },
-  {
-    name: 'Donut',
-    calories: 452,
-    fat: 25.0,
-    carbs: 51,
-    protein: 4.9,
-    sodium: 326,
-    calcium: '2%',
-    iron: '22%',
-  },
-  {
-    name: 'KitKat',
-    calories: 518,
-    fat: 26.0,
-    carbs: 65,
-    protein: 7,
-    sodium: 54,
-    calcium: '12%',
-    iron: '6%',
-  },
 ];
+const classesTranslate = useClassesTranslate();
+const classesOptions = useClassesTypes();
+const rows = ref([]);
+const data = await getFilesArchives(filterParams.value);
+rows.value = data.results;
+const pagination = ref({
+  page: 1,
+  rowsPerPage: 10,
+  rowsNumber: data.count,
+});
+async function updatePage(page) {
+  loading.value = true;
+  filterParams.value.page = page;
+  const filterParamsCopy = cloneDeep(filterParams.value);
+  const temp = await getFilesArchives(filterParamsCopy);
+  rows.value = temp.results;
+  pagination.value.rowsNumber = temp.count;
+  loading.value = false;
+}
+watch(() => search.value, () => {
+  if (search.value) {
+    filterParams.value.filename = search.value;
+  } else {
+    delete filterParams.value.filename;
+  }
+  updatePage(1);
+});
+watch(() => filter.value, () => {
+  if (filter.value?.value) {
+    filterParams.value.predicted_class = filter.value.value;
+  } else {
+    delete filterParams.value.predicted_class;
+  }
+  updatePage(1);
+});
 
+async function updateDB() {
+  dialogUploading.value = false;
+  loading.value = true;
+  filterParams.value = { page: 1 };
+  const temp = await getFilesArchives(filterParams);
+  pagination.value.rowsNumber = temp.count;
+  rows.value = temp.results;
+  loading.value = false;
+}
 export default {
+  methods: {
+    format },
   setup() {
     return {
+      pagination,
+      mdiChevronDown,
+      mdiChevronUp,
+      updatePage,
+      search,
+      loading,
+      dialogUploading,
+      updateDB,
+      mdiUploadCircleOutline,
+      filter,
+      classesOptions,
+      classesTranslate,
       columns,
-      rows,
+      files,
+      rows: ref(rows),
     };
   },
 };
+
 </script>

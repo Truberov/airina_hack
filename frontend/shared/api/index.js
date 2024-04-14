@@ -42,7 +42,7 @@ export async function getFiles(params) {
 }
 
 export async function getFilesArchives(params) {
-  const { data } = await useBaseFetch('', {
+  const { data } = await useBaseFetch('http://10.0.24.56:8000/api/archives/', {
     method: 'GET',
     query: params,
   });

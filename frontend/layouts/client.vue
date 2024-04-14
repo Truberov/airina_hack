@@ -15,7 +15,7 @@
           <p align="center" class="tw-text-black tw-font-bold tw-text">Заказчик</p>
           <q-tab no-caps name="requirements" label="Предъявляемые требования" />
           <q-tab no-caps name="archives" label="База архивов" />
-          <q-tab no-caps name="files" label="База файлов" />
+          <q-tab no-caps name="files" label="Все файлы" />
           <q-separator inset />
           <p align="center" class="tw-text-black tw-font-bold tw-text tw-mt-20">Пользователь</p>
 
