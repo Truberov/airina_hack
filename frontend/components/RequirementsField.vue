@@ -1,54 +1,55 @@
 <template>
-  <div class="tw-h-full">
-    <h1 class="tw-text-3xl tw-mb-10">Выставление требований</h1>
-    <q-form
-      ref="formRequirements"
-      class="q-gutter-md tw-h-full tw-flex tw-flex-col tw-justify-between tw-w-1/2"
-    >
-      <div>
-        <q-input
-          filled
-          type="string"
-          v-model="requirements.name"
-          label="Названия пакета документов"
-          lazy-rules
-          :rules="[
-            val => val !== null && val !== '' || 'Пожалуйста введите название пакета',
-          ]"
-        />
+  <div class="tw-h-full tw-flex tw-flex-col tw-justify-between">
+    <div>
+      <h1 class="tw-text-3xl tw-mb-10">Выставление требований</h1>
+      <q-form
+        ref="formRequirements"
+        class="q-gutter-md tw-flex tw-flex-col tw-justify-between tw-w-1/2"
+      >
         <div>
-          <div v-if="requirements.classes.length" class="tw-text-lg tw-flex tw-justify-between">
-            <div>
-              Название класса
-            </div>
+          <q-input
+            filled
+            type="string"
+            v-model="requirements.name"
+            label="Название пакета документов"
+            lazy-rules
+            :rules="[
+              val => val !== null && val !== '' || 'Пожалуйста введите название пакета',
+            ]"
+          />
+          <div>
+            <div v-if="requirements.classes.length" class="tw-text-lg tw-flex tw-justify-between">
+              <div>
+                Название класса
+              </div>
             <!--            <div class="w-1/3">-->
             <!--              Количество-->
             <!--            </div>-->
-          </div>
-          <div
-            v-for="cls in requirements.classes"
-            :key="cls.id"
-            class="tw-flex tw-justify-between tw-mb-5"
-          >
-            <div class="tw-grow">
-              <q-select
-                v-model="cls.value"
-                option-label="label"
-                option-value="value"
-                dense
-                class="tw-grow"
-                filled
-                :rules="[
-                  val => val !== null && val !== '' || 'Пожалуйста выбирите тип документа',
-                ]"
-                @update:model-value="disableCls"
-                :options="classesOptions"
-              >
-                <template #append>
-                  <q-icon @click="deleteCls(cls)" :name="mdiTrashCanOutline" />
-                </template>
-              </q-select>
             </div>
+            <div
+              v-for="cls in requirements.classes"
+              :key="cls.id"
+              class="tw-flex tw-justify-between tw-mb-5"
+            >
+              <div class="tw-grow">
+                <q-select
+                  v-model="cls.value"
+                  option-label="label"
+                  option-value="value"
+                  dense
+                  class="tw-grow"
+                  filled
+                  :rules="[
+                    val => val !== null && val !== '' || 'Пожалуйста выбирите тип документа',
+                  ]"
+                  @update:model-value="disableCls"
+                  :options="classesOptions"
+                >
+                  <template #append>
+                    <q-icon @click="deleteCls(cls)" :name="mdiTrashCanOutline" />
+                  </template>
+                </q-select>
+              </div>
             <!--            <div class="w-1/3 ">-->
             <!--              <q-input-->
             <!--                v-model="cls.number"-->
@@ -60,19 +61,20 @@
             <!--                ]"-->
             <!--              />-->
             <!--            </div>-->
+            </div>
+          </div>
+          <div
+            @click="addClass"
+            class="tw-text-xl hover:tw-text-secondary tw-cursor-pointer"
+          >+ добавить класс
           </div>
         </div>
-        <div
-          @click="addClass"
-          class="tw-text-xl hover:tw-text-secondary tw-cursor-pointer"
-        >+ добавить класс
-        </div>
-      </div>
-      <div>
-        <q-btn label="Выставить требования" no-caps @click="chooseRequirements" color="primary" />
-        <q-btn label="Сбросить" type="reset" @click="resetRequirements" no-caps color="primary" flat class="q-ml-sm" />
-      </div>
-    </q-form>
+      </q-form>
+    </div>
+    <div>
+      <q-btn label="Выставить требования" no-caps @click="chooseRequirements" color="primary" />
+      <q-btn label="Сбросить" type="reset" @click="resetRequirements" no-caps color="primary" flat class="q-ml-sm" />
+    </div>
   </div>
 </template>
 

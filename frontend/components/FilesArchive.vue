@@ -10,6 +10,15 @@
       :rows-per-page-options="[10]"
       binary-state-sort
     >
+      <template v-slot:top-right>
+        <div class="tw-flex">
+          <q-input dense debounce="300" v-model="search" placeholder="Поиск">
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+        </div>
+      </template>
       <template v-slot:header="props">
         <q-tr :props="props">
           <q-th auto-width />
@@ -77,6 +86,7 @@ import { ref } from 'vue';
 import { format } from 'date-fns';
 import { mdiUploadCircleOutline, mdiChevronDown, mdiChevronUp } from '@mdi/js';
 import cloneDeep from 'lodash.clonedeep';
+import debounce from 'lodash.debounce';
 import { getFilesArchives } from '~/shared/api/index.js';
 import { useClassesTranslate, useClassesTypes } from '~/composables/classesDict.js';
 
@@ -90,7 +100,14 @@ const filterParams = ref({
 });
 const rows = ref([]);
 const pagination = ref({});
-
+watch(() => search.value, debounce(() => {
+  if (search.value) {
+    filterParams.value.search = search.value;
+  } else {
+    delete filterParams.value.search;
+  }
+  updatePage(1);
+}, 750));
 const columns = [
   {
     name: 'filename',
@@ -115,22 +132,14 @@ async function updatePage(page) {
   pagination.value.rowsNumber = temp.count;
   loading.value = false;
 }
-watch(() => search.value, () => {
-  if (search.value) {
-    filterParams.value.filename = search.value;
-  } else {
-    delete filterParams.value.filename;
-  }
-  updatePage(1);
-});
-watch(() => filter.value, () => {
+watch(() => filter.value, () => debounce(() => {
   if (filter.value?.value) {
     filterParams.value.predicted_class = filter.value.value;
   } else {
     delete filterParams.value.predicted_class;
   }
   updatePage(1);
-});
+}, 500));
 
 async function updateDB() {
   dialogUploading.value = false;
