@@ -20,7 +20,7 @@ class ArchiveViewSet(
         'retrieve': DocumentsArchiveSerializer,
         'create': DocumentsArchivePostSerializer,
     }
-    queryset = DocumentsArchive.objects.all()
+    queryset = DocumentsArchive.objects.order_by('-created_at')
     search_fields = ('name',)
 
     def get_serializer_class(self):
