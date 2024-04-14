@@ -1,5 +1,3 @@
-import random
-
 from fastapi import APIRouter, Request, Body, UploadFile
 from starlette import status
 
@@ -30,7 +28,7 @@ async def get_answer(
     "/classification_by_text",
     status_code=status.HTTP_200_OK,
 )
-async def get_answer(
+async def get_answer_by_text(
         _: Request,
         data: ClassifyDocumentRequest = Body(...),
 ):
