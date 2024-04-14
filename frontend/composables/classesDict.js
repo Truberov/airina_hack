@@ -7,7 +7,7 @@ export const useClassesTypes = () => useState('classesTypes', () => [ // !! Ес
   { value: 'invoice', label: 'Счет' },
   { value: 'bill', label: 'Приложение' },
   { value: 'arrangement', label: 'Соглашение' },
-  { value: 'contract оffer', label: 'Договор оферты' },
+  { value: 'contract offer', label: 'Договор оферты' },
   { value: 'statute', label: 'Устав' },
   { value: 'determination', label: 'Решение' },
 ]);
@@ -20,7 +20,7 @@ export const useClassesTranslate = () => useState('classesTranslate', () => ({
   invoice: 'Счет',
   bill: 'Приложение',
   arrangement: 'Соглашение',
-  contractOffer: 'Договор оферты',
+  'contract offer': 'Договор оферты',
   statute: 'Устав',
   determination: 'Решение',
 }));
