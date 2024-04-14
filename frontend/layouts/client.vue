@@ -6,15 +6,27 @@
     >
 
       <template v-slot:before>
+
         <q-tabs
           v-model="tab"
           vertical
           class="tw-text-gray-400 tw-py-20"
         >
-          <q-tab name="requirements" label="Предъявляемые требования" />
-          <q-tab name="common" :disable="requirements.classes.length && requirements.classes[0].value === '' || requirements.classes.length === 0" label="Загрузка файлов" />
-          <q-tab name="archives" label="База архивов" />
-          <q-tab name="files" label="База файлов" />
+          <p align="center" class="tw-text-black tw-font-bold tw-text">Заказчик</p>
+          <q-tab no-caps name="requirements" label="Предъявляемые требования" />
+          <q-tab no-caps name="archives" label="База архивов" />
+          <q-tab no-caps name="files" label="База файлов" />
+          <q-separator inset />
+          <p align="center" class="tw-text-black tw-font-bold tw-text tw-mt-20">Пользователь</p>
+
+          <q-tab no-caps name="common" :disable="requirements.classes.length && requirements.classes[0].value === '' || requirements.classes.length === 0" label="Загрузка файлов" />
+          <div class="tw-opacity-70 tw-text-sky-500 tw-flex tw-flex-col hover:tw-mb-0 tw-justify-center tw-h-full tw-align-bottom tw-items-center tw-text-3xl tw-font-bold">
+            <span class="tw-text-gray-400 tw-text-base tw-font-normal tw-mb-5">design by</span>
+            <div class="tw-flex tw-items-center">
+              <q-icon class="hover:tw-animate-bounce tw-mr-2 tw-bg-gradient-to-r tw-from-sky-500 tw-to-indigo-500 tw-bg-clip-text tw-inline-block tw-text-transparent" name="font_download" />
+              <span class="tablet:tw-block tw-hidden">AiRina</span>
+            </div>
+          </div>
         </q-tabs>
       </template>
 
@@ -35,15 +47,12 @@
             <FilesUploaderView />
           </q-tab-panel>
 
-          <q-tab-panel name="bank" class="tw-p-20">
+          <q-tab-panel name="archives" class="tw-p-20">
             <FilesArchive />
           </q-tab-panel>
 
-          <q-tab-panel name="lawyer">
-            <div class="text-h4 q-mb-md">Movies</div>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
+          <q-tab-panel name="files">
+            <AllFiles />
           </q-tab-panel>
         </q-tab-panels>
       </template>
