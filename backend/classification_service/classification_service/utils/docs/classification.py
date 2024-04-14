@@ -1,9 +1,8 @@
-import os
-
 import torch
 from transformers import BertTokenizer, BertModel
 import torch.nn as nn
 
+from .normalization import normalize_text
 
 class DocumentClassifier(nn.Module):
     def __init__(self, num_classes):
@@ -22,7 +21,7 @@ class DocumentClassifier(nn.Module):
 MODEL_PATH = './model_data/trained_model3.pth'
 TOKENIZER = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
 
-def get_doc_class(text, model_path=MODEL_PATH):
+async def get_doc_class(text, model_path=MODEL_PATH):
     classes = {
         'contract': 10,
         'application': 7,
@@ -37,26 +36,20 @@ def get_doc_class(text, model_path=MODEL_PATH):
         'bill': 2
     }
 
-    # Создание словаря для сопоставления меток классов с индексами
     label_to_index = {label: index for label, index in classes.items()}
-    # Загрузка обученной модели
     num_classes = len(label_to_index)
     model = DocumentClassifier(num_classes)
     model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
     model.eval()
 
-    # Инициализация токенизатора
     tokenizer = TOKENIZER
 
-    # Перенос модели на устройство (CPU или GPU)
     device = torch.device('cpu')
     model.to(device)
 
-    # Создание обратного словаря для сопоставления индексов с метками классов
     index_to_label = {index: label for label, index in label_to_index.items()}
-    # text = normalize_text(text)
+    text = normalize_text(text)
 
-    # Токенизация и подготовка входных данных
     encoding = tokenizer.encode_plus(
         text,
         add_special_tokens=True,
@@ -70,12 +63,10 @@ def get_doc_class(text, model_path=MODEL_PATH):
     input_ids = encoding['input_ids'].to(device)
     attention_mask = encoding['attention_mask'].to(device)
 
-    # Получение предсказаний модели
     with torch.no_grad():
         outputs = model(input_ids, attention_mask)
         _, predicted_class_index = torch.max(outputs, 1)
 
-    # Преобразование индекса предсказанного класса в метку класса
     predicted_class = index_to_label[predicted_class_index.item()]
 
     return predicted_class

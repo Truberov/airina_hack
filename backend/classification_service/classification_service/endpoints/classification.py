@@ -20,7 +20,7 @@ async def get_answer(
     content = await parse_doc(file)
 
     d_return = {
-        "result": get_doc_class(content),
+        "result": await get_doc_class(content),
         "file": file.filename,
     }
     return d_return
